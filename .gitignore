@@ -1,0 +1,4 @@
+/silk/decoder*
+lib*.a
+*.o
+*.S
