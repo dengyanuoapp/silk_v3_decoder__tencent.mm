@@ -99,20 +99,23 @@ unsigned long GetHighResolutionTime() /* O: time in usec*/
 /* Seed for the random number generator, which is used for simulating packet loss */
 static SKP_int32 rand_seed = 1;
 
+const char speechOutFileName__default[] = "tmp.s16le.24000.ac1.pcm";
+
 static void print_usage(char* argv[]) {
     printf( "\nVersion:20160922    Build By kn007 (kn007.net)");
     printf( "\nGithub: https://github.com/kn007/silk-v3-decoder\n");
     printf( "\nusage: %s in.bit out.pcm [settings]\n", argv[ 0 ] );
+    printf( "\n         if out.pcm is null , the filename [ %s ] will be used\n", speechOutFileName__default );
     printf( "\nin.bit       : Bitstream input to decoder" );
     printf( "\nout.pcm      : Speech output from decoder" );
     printf( "\n   settings:" );
     printf( "\n-Fs_API <Hz> : Sampling rate of output signal in Hz; default: 24000" );
     printf( "\n-loss <perc> : Simulated packet loss percentage (0-100); default: 0" );
     printf( "\n-quiet       : Print out just some basic values" );
-    printf( "\n\n\n gen example : \n    tencent.mm.bin__silk_v3_decoder INPUT.amr INPUT.amr.s16le.24000.ac1.pcm\n\n");
-    printf( "\n\n\n play example : \n    ffmpeg -f s16le -ar 24000 -ac 1 -i INPUT.amr.s16le.24000.ac1.pcm  INPUT.amr.wav\n\n");
-    printf( "\n\n\n play example : \n    AUDIODEV=plughw:1 ffplay -autoexit -f s16le -ar 24000 -t 3 -ac 1 INPUT.amr.s16le.24000.ac1.pcm\n\n");
-    printf( "\n\n\n play example : \n    AUDIODEV=plughw:1 ffplay -autoexit INPUT.amr.wav\n\n");
+    printf( "\n\n\n gen example : \n    tencent.mm.bin__silk_v3_decoder INPUT.amr :::=== will gen : %s\n\n", speechOutFileName__default );
+    printf( "\n\n\n play example : \n    ffmpeg -f s16le -ar 24000 -ac 1 -i %s  %s.wav\n\n" , speechOutFileName__default , speechOutFileName__default);
+    printf( "\n\n\n play example : \n    AUDIODEV=plughw:1 ffplay -autoexit -f s16le -ar 24000 -t 3 -ac 1 %s\n\n", speechOutFileName__default );
+    printf( "\n\n\n play example : \n    AUDIODEV=plughw:1 ffplay -autoexit %s.wav\n\n", speechOutFileName__default);
     printf( "\n" );
 }
 
@@ -139,7 +142,7 @@ int main( int argc, char* argv[] )
     SKP_int32 frames, lost, quiet;
     SKP_SILK_SDK_DecControlStruct DecControl;
 
-    if( argc < 3 ) {
+    if( argc < 2 ) {
         print_usage( argv );
         exit( 0 );
     }
@@ -152,8 +155,13 @@ int main( int argc, char* argv[] )
     args = 1;
     strcpy( bitInFileName, argv[ args ] );
     args++;
-    strcpy( speechOutFileName, argv[ args ] );
-    args++;
+    if( argc == 2 ) {
+        //strcpy( speechOutFileName, "tmp.s16le.24000.ac1.pcm");
+        strcpy( speechOutFileName, speechOutFileName__default );
+    } else {
+        strcpy( speechOutFileName, argv[ args ] );
+        args++;
+    }
     while( args < argc ) {
         if( SKP_STR_CASEINSENSITIVE_COMPARE( argv[ args ], "-loss" ) == 0 ) {
             sscanf( argv[ args + 1 ], "%f", &loss_prob );
@@ -481,6 +489,7 @@ int main( int argc, char* argv[] )
     if( !quiet ) {
         printf("\nFile length:                 %.3f s", filetime);
         printf("\nTime for decoding:           %.3f s (%.3f%% of realtime)", 1e-6 * tottime, 1e-4 * tottime / filetime);
+        printf("\n file [ %s ] was generated succeed. " , speechOutFileName__default );
         printf("\n\n");
     } else {
         /* print time and % of realtime */
