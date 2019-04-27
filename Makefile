@@ -38,3 +38,5 @@ server:
 # hddps://themes.gohugo.io/
 # hddps://gohugo.io/themes/
 
+v :
+	vim silk/test/Decoder.c
