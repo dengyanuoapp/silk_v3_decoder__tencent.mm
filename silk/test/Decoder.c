@@ -109,6 +109,7 @@ static void print_usage(char* argv[]) {
     printf( "\n-Fs_API <Hz> : Sampling rate of output signal in Hz; default: 24000" );
     printf( "\n-loss <perc> : Simulated packet loss percentage (0-100); default: 0" );
     printf( "\n-quiet       : Print out just some basic values" );
+    printf( "\n\n\n play example : AUDIODEV=plughw:1 ffplay -f s16le -ar 24000 -t 3 -ac 1 xxx.pcm\n\n");
     printf( "\n" );
 }
 

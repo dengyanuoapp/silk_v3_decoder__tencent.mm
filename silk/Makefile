@@ -110,7 +110,7 @@ LDLIBDIRS = ./
 # Rules
 default: all
 
-all: $(TARGET) decoder
+all: $(TARGET) silk_v3_decoder__tencent.mm.bin
 
 lib: $(TARGET)
 
@@ -120,8 +120,9 @@ $(TARGET): $(OBJS)
 encoder$(EXESUFFIX): $(ENCODER_OBJS)
 	$(LINK.o.cmdline)
 
-decoder$(EXESUFFIX): $(DECODER_OBJS)
+silk_v3_decoder__tencent.mm.bin$(EXESUFFIX): $(DECODER_OBJS)
 	$(LINK.o.cmdline)
+	strip $@
 
 signalcompare$(EXESUFFIX): $(SIGNALCMP_OBJS)
 	$(LINK.o.cmdline)
@@ -129,5 +130,5 @@ signalcompare$(EXESUFFIX): $(SIGNALCMP_OBJS)
 clean:
 	$(RM) $(TARGET)* $(OBJS) $(ENCODER_OBJS) $(DECODER_OBJS) \
 		  $(SIGNALCMP_OBJS) $(TEST_OBJS) \
-		  encoder$(EXESUFFIX) decoder$(EXESUFFIX) signalcompare$(EXESUFFIX)
+		  encoder$(EXESUFFIX) silk_v3_decoder__tencent.mm.bin$(EXESUFFIX) signalcompare$(EXESUFFIX)
 

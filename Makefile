@@ -1,4 +1,6 @@
 all:
+	make -C silk/
+	cp silk/silk_v3_decoder__tencent.mm.bin ./
 
 include Makefile.env
 
